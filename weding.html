@@ -1,58 +1,368 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <title>TemanBacaku</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
-    <style>
-      p {
-        text-align:justify;
-      }
-      img{
-        width: 550px;
-      }
-    </style>
-  </head>
-  <body>
-    <header class="header_area">
-      <div class="main_menu">
-          <nav class="navbar navbar-inverse ">
-              <div class="container-fluid">
-                  <div class="navbar-header">
-                      <a class="navbar-brand logo_h" href="temanbacaku.html">
-                          <img src="gambar/logo.png" alt="logo" style="width:150px;">
-                      </a>
-                      
-                  </div>
-                      <ul class="nav nav-pills navbar-right">
-                          <li class="nav-item ">
-                          <a class="nav-link" href="temanbacaku.html">Home</a>
-                          </li>
-                          <li class="nav-item">
-                          <a class="nav-link" href="#">Ebaut</a>
-                          </li>
-                          <li><input class="form-control mr-sm-2" type="search" placeholder="Search.." ></li>
-                          <li><button class="btn btn-outline-success my-0 my-sm-0" type="submit"><i class='fas fa-search'></i></button></li>
-                      </ul>  
-              </div>                
-          </nav>
-      </div>
-  </header>
-    <main>
-      <div class="album py-2 bg-light">
-        <div class="container">
-        <div class="main">
-            <center><img class="img-fluid" src="gambar/roman/d1.png" alt="" /><br>
-           <img src="gambar/roman/d2.png" alt="" ><br>
 
-          </center> 
-          </div>
-        </div>
-      </section>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Tracking Link Generator & Tracker</title>
+<!-- Leaflet CSS -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-sA+4ygrAqk47KDaT8qtvjE0CgQQZ3U24GkMs7C2tKqc="
+  crossorigin=""
+/>
+<style>
+  /* Reset & base */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #f0f0f5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 16px 24px;
+  }
+  h1 {
+    font-weight: 700;
+    margin-bottom: 0.25em;
+    color: #fafafa;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+  h2 {
+    margin: 0.5em 0 1em 0;
+    font-weight: 500;
+    text-align: center;
+    color: #ddd;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+  }
+  button {
+    background: #42a5f5;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75em 1.2em;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(66,165,245,0.6);
+    transition: background-color 0.25s ease;
+    user-select: none;
+  }
+  button:hover, button:focus {
+    background: #2196f3;
+    outline: none;
+  }
+  input {
+    padding: 0.6em 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 360px;
+    margin-bottom: 1em;
+  }
+  .container {
+    width: 100%;
+    max-width: 360px;
+    background: rgba(255 255 255 / 0.1);
+    padding: 12px 16px 20px;
+    border-radius: 14px;
+    box-shadow: 0 1px 10px rgba(0,0,0,0.25);
+    flex-shrink: 0;
+  }
+  #linksList {
+    margin-top: 12px;
+    max-height: 180px;
+    overflow-y: auto;
+    font-size: 0.9rem;
+    color: #e0e0e0;
+  }
+  #linksList a {
+    color: #81d4fa;
+    word-break: break-all;
+    text-decoration: underline;
+  }
+  #linksList div {
+    margin-bottom: 6px;
+  }
+
+  #tracker {
+    width: 100%;
+    height: 300px;
+    border-radius: 14px;
+    margin-top: 16px;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.35);
+  }
+
+  #locationInfo {
+    background: rgba(0,0,0,0.25);
+    padding: 12px;
+    border-radius: 10px;
+    margin-top: 12px;
+    font-size: 0.95rem;
+    line-height: 1.3;
+    color: #fafafa;
+    user-select: text;
+  }
+  #message {
+    margin-top: 8px;
+    font-size: 0.95rem;
+    color: #ffecb3;
+    font-style: italic;
+    min-height: 1.2em;
+  }
+
+  @media (max-width: 400px) {
+    body {
+      padding: 12px 8px 16px;
+    }
+    .container {
+      max-width: 100%;
+    }
+    input {
+      max-width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+<h1>Tracking Link Generator</h1>
+<div id="creator" class="container" role="region" aria-label="Tracking link generator">
+  <button id="createLinkBtn" aria-describedby="createDesc">Create Tracking Link</button>
+  <div id="createDesc" style="font-size: 0.85rem; margin-top:6px; color:#ddd; max-width:360px; text-align:center;">
+    Click to create a unique tracking link. Share it to track visitors' location when they open it.
+  </div>
+  <div id="linksList" aria-live="polite" aria-relevant="additions"></div>
+</div>
+
+<div id="trackerContainer" class="container" style="display:none;">
+  <h2>Visitor Location</h2>
+  <div id="message" role="alert" aria-live="assertive"></div>
+  <div id="locationInfo"></div>
+  <div id="tracker"></div>
+</div>
+
+<!-- Leaflet JS -->
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-oC3rZr8+NUj5vIbqip2ltF+Bmy1MB50m4R9CMwBOksA="
+  crossorigin=""
+></script>
+
+<script>
+  (function() {
+    "use strict";
+
+    const createLinkBtn = document.getElementById('createLinkBtn');
+    const linksList = document.getElementById('linksList');
+    const trackerContainer = document.getElementById('trackerContainer');
+    const locationInfo = document.getElementById('locationInfo');
+    const message = document.getElementById('message');
+    const trackerDiv = document.getElementById('tracker');
+
+    // Store links in localStorage key
+    const STORAGE_KEY = 'tracking_links';
+
+    // Read params to detect if in tracking mode
+    const urlParams = new URLSearchParams(window.location.search);
+    const trackingId = urlParams.get('track');
+
+    // Generate a random ID for tracking link
+    function generateId(length = 10) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for(let i=0; i<length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    }
+
+    // Save new tracking link to localStorage
+    function saveTrackingLink(id) {
+      let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      if (!data.includes(id)) {
+        data.push(id);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      }
+    }
+
+    // Load saved links from localStorage
+    function loadTrackingLinks() {
+      let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      linksList.innerHTML = '';
+      if(data.length === 0) {
+        linksList.textContent = 'No tracking links created yet.';
+        return;
+      }
+      data.forEach(id => {
+        const fullUrl = `${window.location.origin}${window.location.pathname}?track=${encodeURIComponent(id)}`;
+        const div = document.createElement('div');
+        const a = document.createElement('a');
+        a.href = fullUrl;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.textContent = fullUrl;
+        a.title = 'Open tracking link in new tab';
+        div.appendChild(a);
+        linksList.appendChild(div);
+      });
+    }
+
+    // Show message
+    function showMessage(msg, isError = false) {
+      message.textContent = msg;
+      message.style.color = isError ? '#ff5252' : '#ffecb3';
+    }
+
+    // Fetch ip info from ipapi.co JSON API
+    async function fetchIPInfo() {
+      try {
+        const res = await fetch('https://ipapi.co/json/');
+        if (!res.ok) throw new Error('IP info request failed');
+        return await res.json();
+      } catch(err) {
+        return null;
+      }
+    }
+
+    // Initialize Leaflet map
+    function initMap(lat, lon) {
+      trackerDiv.style.height = '300px';
+
+      const map = L.map('tracker').setView([lat, lon], 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+
+      const marker = L.marker([lat, lon]).addTo(map);
+      return map;
+    }
+
+    // Display location info nicely formatted
+    function displayLocationInfo(data) {
+      if (!data) {
+        locationInfo.textContent = 'Unable to determine location.';
+        return;
+      }
+
+      let lines = [];
+      if (data.city) lines.push(`City: ${data.city}`);
+      if (data.region) lines.push(`Region: ${data.region}`);
+      if (data.country_name) lines.push(`Country: ${data.country_name}`);
+      if (data.latitude && data.longitude) lines.push(`Latitude: ${data.latitude.toFixed(5)}, Longitude: ${data.longitude.toFixed(5)}`);
+      if (data.ip) lines.push(`IP: ${data.ip}`);
+
+      locationInfo.textContent = lines.join(' | ');
+    }
+
+    // Main tracking mode function
+    async function trackingMode(id) {
+      document.title = `Tracking ID: ${id} - Visitor Location`;
+      trackerContainer.style.display = 'block';
+      showMessage('Determining your location...');
+
+      // First get IP-based location as fallback
+      let ipData = await fetchIPInfo();
+
+      // Then try browser geolocation (may prompt user)
+      function geolocPromise() {
+        return new Promise((resolve, reject) => {
+          if (!navigator.geolocation) {
+            reject('Geolocation not supported by your browser.');
+            return;
+          }
+          navigator.geolocation.getCurrentPosition(
+            pos => resolve(pos.coords),
+            err => reject(err.message || 'Permission denied')
+          );
+        });
+      }
+
+      let finalData = {
+        city: ipData?.city || null,
+        region: ipData?.region || null,
+        country_name: ipData?.country_name || null,
+        latitude: ipData?.latitude || null,
+        longitude: ipData?.longitude || null,
+        ip: ipData?.ip || null
+      };
+
+      try {
+        const coords = await geolocPromise();
+        finalData.latitude = coords.latitude;
+        finalData.longitude = coords.longitude;
+        showMessage('Location obtained via browser Geolocation.');
+      } catch(e) {
+        showMessage('Using approximate location from your IP address.');
+      }
+
+      displayLocationInfo(finalData);
+
+      // Show map
+      if (finalData.latitude && finalData.longitude) {
+        initMap(finalData.latitude, finalData.longitude);
+      } else {
+        trackerDiv.style.height = '0';
+      }
+
+      // Save this visit record to localStorage per tracking ID (for demo)
+      const visitRecordKey = `tracking_visits_${id}`;
+      let visits = JSON.parse(localStorage.getItem(visitRecordKey) || '[]');
+      visits.push({
+        timestamp: new Date().toISOString(),
+        latitude: finalData.latitude,
+        longitude: finalData.longitude,
+        city: finalData.city,
+        region: finalData.region,
+        country: finalData.country_name,
+        ip: finalData.ip
+      });
+      localStorage.setItem(visitRecordKey, JSON.stringify(visits));
+    }
+
+    // Initialize main page UI
+    function initCreator() {
+      createLinkBtn.addEventListener('click', () => {
+        const newId = generateId();
+        saveTrackingLink(newId);
+        loadTrackingLinks();
+        // Show a temporary copy-to-clipboard notification
+        const fullUrl = `${window.location.origin}${window.location.pathname}?track=${encodeURIComponent(newId)}`;
+        navigator.clipboard.writeText(fullUrl).then(() => {
+          showMessage('Tracking link created and copied to clipboard!');
+          setTimeout(() => {
+            showMessage('');
+          }, 4000);
+        }, () => {
+          showMessage('Tracking link created! (Copy manually)', false);
+        });
+      });
+
+      loadTrackingLinks();
+    }
+
+    // Entry point
+    if (trackingId) {
+      // Tracking mode: show visitor location
+      document.getElementById('creator').style.display = 'none';
+      trackingMode(trackingId);
+    } else {
+      // Creator mode
+      trackerContainer.style.display = 'none';
+      initCreator();
+    }
+  })();
+</script>
+</body>
 </html>
+</content>
+</create_file>
+```
